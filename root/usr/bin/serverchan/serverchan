@@ -1070,6 +1070,42 @@ function send(){
 	uci commit serverchan
 }
 
+	uci set serverchan.serverchan.send_enable=3
+	uci commit serverchan
+	echo "`DATE`  【定时数据】创建定时任务" >> ${logfile}
+	local send_title=`get_config send_title`
+	if [ -z "$send_title" ] ; then local send_title="路由状态：";fi
+
+		if [ ! -z "$router_wan" ] && [ "$router_wan" -eq "1" ] ; then
+			local send_content=${send_content}"%0D%0A%0D%0A""---%0D%0A%0D%0A#### WAN 口信息%0D%0A%0D%0A     接口ip:$send_wanIP"
+			if [ ! -z "$send_content" ] && [ ! -z "$router_wan" ] ; then
+				if ( ! echo ${send_wanIP} | grep -q -w ${send_hostIP} );then local send_content=${send_content}"%0D%0A%0D%0A""     外网 ip 与接口 ip 不一致，你的 ip 不是公网 ip";fi
+			else
+				local send_content=${send_content}"%0D%0A%0D%0A""     ip 获取失败"
+			fi
+			local send_content=${send_content}"%0D%0A%0D%0A""`ubus call network.interface.wan status | grep \"uptime\" | sed $'s/\"uptime": //g'| sed $'s/\,//g'| awk -F. '{run_days=$1 / 86400;run_hour=($1 % 86400)/3600;run_minute=($1 % 3600)/60;run_second=$1 % 60;printf("     在线时间：%d天%d时%d分%d秒",run_days,run_hour,run_minute,run_second)}'`"
+		fi
+		local client_list=`get_config client_list`
+		
+	if [ ! -z "$device_name" ] ; then local send_title="【$device_name】$send_title" ;fi
+	local send_title=$( echo $send_title | sed $'s/\ /%20/g'| sed $'s/\"/%22/g'| sed $'s/\#/%23/g'| sed $'s/\&/%26/g'| sed $'s/\,/%2C/g'| sed $'s/\//%2F/g'| sed $'s/\:/%3A/g'| sed $'s/\;/%3B/g'| sed $'s/\=/%3D/g'| sed $'s/\@/%40/g')
+	if [ ! -z "$debuglevel" ] && [ "$debuglevel" -ne "1" ] ; then echo "`DATE`  【定时数据】进行 URL 编码，标题：$send_title" >> ${logfile};fi
+	if [ -z "$send_content" ] ; then
+		local send_content="%0D%0A%0D%0A---%0D%0A%0D%0A#### 我遇到了一个难题%0D%0A%0D%0A>你没有选择需要发送的项目，该怎么办呢%0D%0A%0D%0A---";
+		echo "`DATE`  【！！！】定时发送选项错误，请检查你的设置" >> ${logfile}
+	fi
+	
+	local nowtime=`DATE`
+	disturb=`serverchan_disturb`
+	if [ $disturb -eq "0" ] ;then
+		echo "`DATE`  【免打扰】当前为免打扰时间，消息不发送" >> ${logfile}
+	else
+		curl -s "http://sc.ftqq.com/$serverchan_sckey.send?text=${send_title}" -d "&desp=${nowtime}%0D%0A%0D%0A${send_content}" >/dev/null
+		echo "`DATE`  【定时数据】微信推送" >> ${logfile}
+	fi
+	uci set serverchan.serverchan.send_enable=0
+	uci commit serverchan
+# }
 # 初始化在线设备列表
 function serverchan_first(){
 if [ ! -z "$serverchan_enable" ] && [ "$serverchan_enable" -eq "1" ] ; then

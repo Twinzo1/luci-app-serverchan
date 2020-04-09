@@ -9,7 +9,8 @@ uci -q batch <<-EOF >/dev/null
 EOF
 
 chmod 755 /etc/init.d/serverchan
-chmod 755 /usr/bin/serverchan/serverchan
+chmod 755 /etc/init.d/sccustom
+chmod 755 /usr/bin/serverchan/*
 #chmod -R 755 /usr/bin/serverchan/wrtbwmon
 rm -f /tmp/luci-indexcache
 exit 0
