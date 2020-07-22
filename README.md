@@ -5,10 +5,10 @@
 - 依赖 iputils-arping + curl 命令，安装前请 `opkg update`，小内存路由谨慎安装
 - 使用主动探测设备连接的方式检测设备在线状态，以避免WiFi休眠机制，主动探测较为耗时，**如遇设备休眠频繁，请自行调整超时设置**
 - 流量统计功能依赖 wrtbwmon ，自行选装或编译，该插件与 Routing/NAT 、Flow Offloading 冲突，开启无法获取流量，自行选择，L大版本直接编译 luci-app-wrtbwmon
-
+----------
 #### 使用
 - 在feeds.config中添加：```src-git serverchan https://github.com/Twinzo1/serverchan```
-
+----------
 #### 主要功能
 - 路由 ip/ipv6 变动推送
 - 设备别名
