@@ -7,7 +7,7 @@ include $(TOPDIR)/rules.mk
 LUCI_TITLE:=Luci support for serverchan
 LUCI_DEPENDS:=+iputils-arping +curl
 LUCI_PKGARCH:=all
-PKG_VERSION:=1.78
+PKG_VERSION:=1.80
 PKG_RELEASE:=8
 
 include $(TOPDIR)/feeds/luci/luci.mk
