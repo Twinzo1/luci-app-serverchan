@@ -1,7 +1,50 @@
+# 改名公告
+#### 2021年04月25日 起luci-app-serverchand 改名为 luci-app-pushbot
+
+如需拉取编译
+请把：
+
+`# git clone https://github.com/zzsj0928/luci-app-serverchand package/luci-app-serverchand`
+
+改为
+
+`git clone https://github.com/zzsj0928/luci-app-pushbot package/luci-app-pushbot`
+
+并把 .config 中
+
+`CONFIG_PACKAGE_luci-app-serverchand=y`
+
+改为
+
+`CONFIG_PACKAGE_luci-app-pushbot=y`
+
+注意：本次改名需要提前备份serverchand配置，并于PushBot中重新配置。
+
+再次谢谢各位支持
+
 # 申明
-- 本插件由tty228/luci-app-serverchan原创.
+- 本插件由[tty228/luci-app-serverchan](https://github.com/tty228/luci-app-serverchan)原创.
 - 因微信推送存在诸多弊端（无法分开聊天工具与功能性消息推送，通知内不显示内容，内容需要点开才能查看等）,
 - 故由  然后七年  @zzsj0928 重新修改为本插件，为钉钉机器人API使用。
+- 本插件工作在：openwrt
+- 本插件支持：钉钉推送,企业微信推送,PushPlus推送,微信推送,企业微信应用推送,飞书推送,钉钉机器人推送,企业微信机器人推送,飞书机器人推送,一对多推送,Bark推送(仅iOS)
+# 显示效果
+## 通知栏：直接显示推送主题，一目了然，按设备不同，分组显示
+<img src="https://raw.githubusercontent.com/zzsj0928/ReadmeContents/main/Serverchand/Msg.Notification.jpg" width="500">
+
+## 消息列表：直接显示最新推送的标题
+<img src="https://raw.githubusercontent.com/zzsj0928/ReadmeContents/main/Serverchand/Msg.List.jpg" width="500">
+
+## 消息内容：直接显示所有推送信息，不用二次点开再查看
+<img src="https://raw.githubusercontent.com/zzsj0928/ReadmeContents/main/Serverchand/MsgContentDetials.jpeg" width="500">
+
+# 下载
+- [luci-app-pushbot](https://github.com/zzsj0928/luci-app-pushbot/releases)
+
+
+-----------------------------------------------------
+#####################################################
+-----------------------------------------------------
 
 # 以下为原插件简介：
 
@@ -48,9 +91,4 @@
 - 提交bug时请尽量带上设备信息，日志与描述
 （如执行 `/usr/bin/serverchan/serverchan` 后的提示、日志信息、/tmp/serverchan/ipAddress 文件信息、或尝试使用 sh -x /usr/bin/serverchan/serverchan 查看详细运行信息 ）
 - 三言两句恕我无能为力
-
-# Donate
-如果你觉得此项目对你有帮助，请捐助我们，以使项目能持续发展，更加完善。
-
-![image](https://github.com/tty228/Python-100-Days/blob/master/res/WX.jpg)
 
