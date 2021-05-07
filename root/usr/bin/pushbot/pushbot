@@ -134,19 +134,15 @@ function getmac(){
 
 # 查询主机名
 function getname(){
+	if [ -s "/tmp/dhcp_comments.conf" ]; then
+		[ -z $tmp_name ] && tmp_name=$(cat /tmp/dhcp_comments.conf | grep -w ${1} |awk '{print $1}' | grep -v "^$" | sort -u)
+		[ -z $tmp_name ] && tmp_name=$(cat /tmp/dhcp_comments.conf | grep -i $2 |awk '{print $1}' | grep -v "^$" | sort -u)
+	fi
 	[ -z "$tmp_name" ] && local tmp_name=`echo "$device_aliases"|grep -i $2|awk '{print $2}'|grep -v "^$"|sort -u|head -n1`
 	[ -f "${dir}ipAddress" ] && [ -z "$tmp_name" ] && local tmp_name=`cat ${dir}ipAddress|grep -w ${1}|awk '{print $3}'|grep -v "^$"|sort -u|head -n1`
 	[ -f "${dir}tmp_downlist" ] && [ -z "$tmp_name" ] && local tmp_name=`cat ${dir}tmp_downlist|grep -w ${1}|awk '{print $3}'|grep -v "^$"|sort -u|head -n1`
 	( ! echo "$tmp_name"|grep -q -w "unknown\|*" ) && [ ! -z "$tmp_name" ] && echo "$tmp_name" && return || unset tmp_name # 为unknown时重新读取
-	if [ -f "/var/dhcp.leases" ] && [ -z "$tmp_name" ]; then
-		if [ -s "/tmp/dhcp_comments.conf" ]; then
-			tmp_name=$(cat /tmp/dhcp_comments.conf | grep -w ${1} |awk '{print $1}' | grep -v "^$" | sort -u)
-			[ -z $tmp_name ] && tmp_name=$(cat /tmp/dhcp_comments.conf | grep -i $2 |awk '{print $1}' | grep -v "^$" | sort -u)
-			[ -z $tmp_name ] && tmp_name=`cat /var/dhcp.leases|grep -w ${1}|awk '{print $4}'|grep -v "^$"|sort -u|head -n1`
-		else
-			local tmp_name=`cat /var/dhcp.leases|grep -w ${1}|awk '{print $4}'|grep -v "^$"|sort -u|head -n1`
-		fi
-	fi
+	[ -f "/var/dhcp.leases" ] && [ -z "$tmp_name" ] && local tmp_name=`cat /var/dhcp.leases|grep -w ${1}|awk '{print $4}'|grep -v "^$"|sort -u|head -n1`
 	( ! echo "$tmp_name"|grep -q -w "unknown\|*" ) && [ ! -z "$tmp_name" ] && echo "$tmp_name" && return || unset tmp_name # 为unknown时重新读取
 	[ -z "$dhcp_config" ] && dhcp_config=`uci show dhcp|grep "ip\|mac\|name"`
 	for dhcp_config_str in "host" "domain"; do
